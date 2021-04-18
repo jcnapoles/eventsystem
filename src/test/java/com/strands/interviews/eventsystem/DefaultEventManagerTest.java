@@ -109,4 +109,16 @@ public class DefaultEventManagerTest
         {
         }
     }
+    
+	/**
+	 * Check that when sending a new event using SubEvent class, Simple Event
+	 * listeners are not listening 
+	 */
+    @Test
+    public void testPublishSubEventAndSimpleEventListenersNotListening() {
+		EventListenerMock eventListenerMock = new EventListenerMock(new Class[] { SimpleEvent.class });
+		eventManager.registerListener("some.key", eventListenerMock);
+		eventManager.publishEvent(new SubEvent(this));
+		assertFalse(eventListenerMock.isCalled());		
+    }
 }
