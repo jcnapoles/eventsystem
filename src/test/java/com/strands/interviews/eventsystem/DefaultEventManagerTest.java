@@ -1,5 +1,6 @@
 package com.strands.interviews.eventsystem;
 
+import com.strands.interviews.eventsystem.events.CreationEvent;
 import com.strands.interviews.eventsystem.events.SimpleEvent;
 import com.strands.interviews.eventsystem.events.SubEvent;
 import com.strands.interviews.eventsystem.impl.DefaultEventManager;
@@ -111,15 +112,19 @@ public class DefaultEventManagerTest
     }
     
 	/**
-	 * Check that when sending a new event using SubEvent class, Simple Event
-	 * listeners are not listening 
+	 * Check that when a listener of a super class is created it can receive events
+	 * from subclasses
 	 */
     @Test
     public void testPublishSubEventAndSimpleEventListenersNotListening() {
 		EventListenerMock eventListenerMock = new EventListenerMock(new Class[] { SimpleEvent.class });
 		eventManager.registerListener("some.key", eventListenerMock);
 		eventManager.publishEvent(new SubEvent(this));
-		assertFalse(eventListenerMock.isCalled());		
+		assertTrue(eventListenerMock.isCalled());
+		eventListenerMock = new EventListenerMock(new Class[] { SimpleEvent.class });
+		eventManager.registerListener("some.key", eventListenerMock);
+		eventManager.publishEvent(new CreationEvent(this));
+		assertTrue(eventListenerMock.isCalled());
     }
     
 	/**

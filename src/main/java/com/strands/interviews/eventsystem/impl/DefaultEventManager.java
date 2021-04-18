@@ -36,7 +36,10 @@ public class DefaultEventManager implements EventManager
         if (listenersByClass.get(Object.class) != null) {
         	collection = (Collection) listenersByClass.get(Object.class);
 		} else {
-			collection = (Collection) listenersByClass.get(eventClass);
+			collection = (Collection) listenersByClass.get(eventClass);			
+			if (collection == null) {
+				collection = (Collection) listenersByClass.get(eventClass.getSuperclass());
+			} 
 		}
     	return collection;
     }
