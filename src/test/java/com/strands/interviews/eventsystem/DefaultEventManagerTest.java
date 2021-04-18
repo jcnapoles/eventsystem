@@ -121,4 +121,28 @@ public class DefaultEventManagerTest
 		eventManager.publishEvent(new SubEvent(this));
 		assertFalse(eventListenerMock.isCalled());		
     }
+    
+	/**
+	 * Check that when add a event listener then this must listen all events
+	 */
+	@Test
+	public void testAddEventListenerAndThenListenAllEvents() {
+		EventListenerMock eventListenerMock = new EventListenerMock(new Class[] {});
+		EventListenerMock eventListenerMock2 = new EventListenerMock(new Class[] { SimpleEvent.class });
+		eventManager.registerListener("some.key", eventListenerMock);
+		assertFalse(eventListenerMock.isCalled());
+		eventManager.publishEvent(new InterviewEvent() {
+
+			public Object getSource() {
+
+				return "Testing a generic listener events";
+			}
+		});
+		assertTrue(eventListenerMock.isCalled());
+		eventManager.registerListener("some.key", eventListenerMock2);
+		assertFalse(eventListenerMock2.isCalled());
+		eventManager.publishEvent(new SimpleEvent(this));
+		assertFalse(eventListenerMock2.isCalled());
+
+	}
 }
